@@ -37,22 +37,44 @@ router.post("/create", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-  // ... your code here
 });
 
-router.get("/drones/:id/edit", (req, res, next) => {
+router.get("/:id/edit", async (req, res, next) => {
   // Iteration #4: Update the drone
-  // ... your code here
+  try {
+    const droneToEdit = await Drone.findById(req.params.id);
+    res.render("drones/update-form.hbs", {
+      droneToEdit,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.post("/drones/:id/edit", (req, res, next) => {
+router.post("/:id/edit", async (req, res, next) => {
   // Iteration #4: Update the drone
-  // ... your code here
+
+  try {
+    const response = await Drone.findByIdAndUpdate(req.params.id, {
+      name: req.body.name,
+      propellers: req.body.propellers,
+      maxSpeed: req.body.maxSpeed,
+    });
+    res.redirect("/drones");
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.post("/drones/:id/delete", (req, res, next) => {
+router.post("/:id/delete", async (req, res, next) => {
   // Iteration #5: Delete the drone
-  // ... your code here
+
+  try {
+    await Drone.findByIdAndDelete(req.params.id);
+    res.redirect("/drones");
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
